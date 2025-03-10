@@ -1,0 +1,37 @@
+import cv2
+import numpy as np
+
+def piecewise_linear(image, r1, s1, r2, s2):
+    """Apply piecewise linear transformation using NumPy operations with .copy()."""
+    
+    # Create a copy of the original image to preserve it
+    output = image.copy()
+
+    # Apply transformation using NumPy vectorized operations
+    mask1 = image < r1
+    mask2 = (image >= r1) & (image < r2)
+    mask3 = image >= r2
+
+    output[mask1] = (s1 / r1) * image[mask1]
+    output[mask2] = ((s2 - s1) / (r2 - r1)) * (image[mask2] - r1) + s1
+    output[mask3] = ((255 - s2) / (255 - r2)) * (image[mask3] - r2) + s2
+
+    return output
+
+# Load the image
+image_path = "C:/Users/divya/OneDrive/Desktop/CVPR/shin.png"
+image = cv2.imread(image_path, cv2.IMREAD_COLOR)  # Read as a color image
+
+# Define transformation parameters
+r1, s1, r2, s2 = 50, 10, 150, 240
+
+# Apply the transformation
+transformed_image = piecewise_linear(image, r1, s1, r2, s2)
+
+# Show and save the images
+cv2.imshow('Original Image', image)
+cv2.imshow('Transformed Image', transformed_image)
+cv2.imwrite("C:/Users/divya/OneDrive/Desktop/CVPR/piecewise_shin.png", transformed_image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
