@@ -1,0 +1,45 @@
+import cv2 
+# Input and output video paths 
+input_video_path = r'C:\Users\admin\Downloads\istockphoto-1808667323
+640_adpp_is.mp4'  # Your video path 
+output_video_path = r'C:\Users\admin\Downloads\output_video.mp4' 
+ # Path to save the output video 
+# Open a video file for reading 
+cap = cv2.VideoCapture(input_video_path) 
+# Check if the video opened successfully 
+if not cap.isOpened(): 
+    print("Error: Couldn't open video.") 
+    exit() 
+ 
+# Get the video frame width, height, and frames per second (fps) 
+frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) 
+frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) 
+fps = cap.get(cv2.CAP_PROP_FPS) 
+ 
+# Define the codec and create a VideoWriter object to save the output video 
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for .mp4 format 
+out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
+while True: 
+    # Read a frame from the input video 
+    ret, frame = cap.read() 
+     
+    if not ret: 
+        break  # Break the loop if there are no frames left to read 
+     
+    # (Optional) Process the frame here if you need, e.g., convert to grayscale 
+    # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Example processing 
+     
+    # Write the processed frame to the output video 
+    out.write(frame) 
+     
+    # Display the frame (optional) 
+    cv2.imshow('Frame', frame) 
+     
+    # Exit on pressing 'q' 
+    if cv2.waitKey(1) & 0xFF == ord('q'): 
+        break 
+ 
+# Release the video objects and close any open windows 
+cap.release() 
+out.release() 
+cv2.destroyAllWindows()
