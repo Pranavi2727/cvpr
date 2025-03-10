@@ -1,0 +1,99 @@
+ADJUSTING BRIGHTNESS
+
+from PIL import Image, ImageEnhance 
+import numpy as np 
+import matplotlib.pyplot as plt 
+ 
+def adjust_brightness(image, factor): 
+       enhancer = ImageEnhance.Brightness(image) 
+       return enhancer.enhance(factor) 
+ 
+image = Image.open('flower.jpg') 
+enhanced_image = adjust_brightness(image, 1.5) 
+original_and_enhanced_image = np.hstack((image, enhanced_image)) 
+ 
+plt.figure(figsize = [15, 15]) 
+plt.axis('off') 
+plt.imshow(original_and_enhanced_image, cmap = 'gray')
+
+ 
+ADJUSTING CONTRAST OF AN IMAGE
+ 
+from PIL import Image, ImageEnhance 
+ import numpy as np 
+ import matplotlib.pyplot as plt  
+ 
+ def adjust_contrast(image, factor): 
+     enhancer = ImageEnhance.Contrast(image) 
+     return enhancer.enhance(factor) 
+ 
+ image = Image.open('flower.jpg') 
+ enhanced_contrast = adjust_contrast(image, 1.5) 
+ original_and_enhanced_contrast = np.hstack((image, enhanced_contrast)) 
+ plt.figure(figsize = [30, 30]) 
+ plt.axis('off') 
+ plt.imshow(original_and_enhanced_contrast, cmap = 'gray')
+
+
+
+INTENSITY SLICING
+ 
+  import cv2 
+ import numpy as np 
+ import matplotlib.pyplot as plt 
+ # Load a grayscale image 
+ image = cv2.imread('flower.jpg') 
+ # Define the intensity range to slice 
+ lower_threshold = 50  # Lower intensity value
+ upper_threshold = 100  # Upper intensity value 
+ # Create an output image where we will store the sliced results 
+ output_image = np.zeros_like(image) 
+ # Apply intensity level slicing 
+ output_image[(image >= lower_threshold) & (image <= upper_threshold)] = 255 
+ # Display the original and sliced images side by side for comparison 
+ plt.figure(figsize=(10, 5)) 
+ plt.subplot(1, 2, 1) 
+ plt.title('Original Image') 
+ plt.imshow(image, cmap='gray') 
+ plt.axis('off') 
+ plt.subplot(1, 2, 2) 
+ plt.title(f'Intensity Sliced ({lower_threshold}-{upper_threshold})') 
+ plt.imshow(output_image, cmap='gray') 
+ plt.axis('off') 
+ plt.show() 
+
+BIT-LEVEL SLICING
+import cv2 
+ import numpy as np 
+ import matplotlib.pyplot as plt 
+ # Load a grayscale image 
+ image = cv2.imread('flower.jpg', cv2.IMREAD_GRAYSCALE) 
+ # Function to perform bit-level slicing 
+ def bit_level_slicing(image, bit_position): 
+  # Create a mask for the specific bit position (bit_position: 0 to 7) 
+    mask = 1 << bit_position 
+ # Apply the mask and shift right to isolate the desired bit 
+    sliced_image = (image & mask) >> bit_position 
+ # Scale to 255 (white) for visibility in display 
+    sliced_image = sliced_image * 255 
+    return sliced_image 
+ # Perform bit-level slicing for each bit from 0 to 7 
+ bit_slices = [] 
+ for bit in range(8): 
+     sliced_img = bit_level_slicing(image, bit) 
+     bit_slices.append(sliced_img) 
+ # Display the original image and bit-level slices 
+ plt.figure(figsize=(12, 8)) 
+ # Display the original image
+  # Display the original image 
+ plt.subplot(3, 3, 1) 
+ plt.title('Original Image') 
+ plt.imshow(image, cmap='gray') 
+ plt.axis('off') 
+ # Display the bit-level slices 
+ for i in range(8): 
+     plt.subplot(3, 3, i + 2) 
+     plt.title(f'Bit {i}') 
+     plt.imshow(bit_slices[i], cmap='gray') 
+     plt.axis('off') 
+     plt.show()
